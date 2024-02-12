@@ -3,6 +3,7 @@ import { devtools, persist } from "zustand/middleware";
 import { customSessionStorage } from '../storages/session.storage';
 import { firebaseStorage } from "../storages/firebase.storage";
 import { logger } from "../middlewares/logger.middleware";
+import { useWeddingBoundStore } from "../wedding";
 
 interface PersonState {
   firstName: string;
@@ -34,3 +35,11 @@ export const usePersonState = create<PersonState & Actions>()(
     )
   )
 );
+
+usePersonState.subscribe( (nextState, /*prevState*/) => {
+  const { firstName, lastName } = nextState;
+
+  useWeddingBoundStore.getState().setFirstName( firstName );
+  useWeddingBoundStore.getState().setLastName( lastName );
+
+} );
